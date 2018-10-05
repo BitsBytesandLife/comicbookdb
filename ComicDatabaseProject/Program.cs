@@ -9,33 +9,43 @@ namespace ComicDatabaseProject
     
     class Program
     {
-        static void Main(string[] args)
+        private static string connectionString;
+
+        public static void Main(string[] args)
         {
-            var config = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
+            //Setting Application flies
+            ConsoleAppSettings();
 
-                .SetBasePath(Directory.GetCurrentDirectory())
 
-                .AddJsonFile("appsettings.json")
 
-#if DEBUG
-
-                .AddJsonFile("appsettings.Debug.json")
-
-#else
-
-                .AddJsonFile("appsettings.Release.json")
-
-#endif
-
-                .Build();
-
-            connString = config.GetConnectionString("DefaultConnection");
 
             Console.ReadLine();
         }
 
 
+
+        public static void ConsoleAppSettings()
+        {
+
+            var config = new ConfigurationBuilder()
+               .SetBasePath(Directory.GetCurrentDirectory())
+               .AddJsonFile("appsetting.json")
+#if DEBUG
+                .AddJsonFile("appsetting.Debug.json")
+#endif
+                .Build();
+
+
+            string connString = config.GetConnectionString("DefaultConnection");
+
+            comicBookRepository cbRepo = new comicBookRepository(connectionString);
+
+
+        }
     }
 
-    
+   
+
+
 }
+
