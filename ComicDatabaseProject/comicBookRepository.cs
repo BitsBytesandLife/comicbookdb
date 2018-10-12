@@ -10,6 +10,7 @@ namespace ComicDatabaseProject
     class comicBookRepository
     {
         private static string connectionString;
+        
 
         public comicBookRepository(string _connectionString)
         {
@@ -30,8 +31,8 @@ namespace ComicDatabaseProject
                 conn.Open();
 
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT title, issue, publisher, comicBookCondition, comicDetail, comicBookValue /n" +
-                                  "FROM comicbooks:";
+                cmd.CommandText = "SELECT title, issue, publisher, comicBookCondition " +
+                                  "FROM comicbooks;";
                 MySqlDataReader reader = cmd.ExecuteReader();
 
 
@@ -41,11 +42,12 @@ namespace ComicDatabaseProject
                     comicbooks comic = new comicbooks();
                     comic.title = (string)reader["title"];
                     comic.issue = (int)reader["issue"];
-                    comic.publisher = (int)reader["publisher"];
-                    comic.comicBookCondition = (int)reader["comicBookCondition"];
-                    comic.comicDetail = (int)reader["comicDetail"];
-                    comic.comicBookValue = (int)reader["comicBookValue"];
+                    comic.publisher = (string)reader["publisher"];
+                    comic.comicBookCondition = (string)reader["comicBookCondition"];
                     cb.Add(comic);
+
+                    Console.WriteLine($"Title: {comic.title} Issue:{comic.issue} Publisher:{comic.publisher} \n" +
+                                      $"Condition: {comic.comicBookCondition}");
                 }
                 return cb;
             }
@@ -54,7 +56,7 @@ namespace ComicDatabaseProject
         /// <summary>
         ///     Creates record in the comicbooks table.
         /// </summary>
-        public void CreateComicBookRecord(comicbooks cb)
+        public void CreateCBRecord(comicbooks cb)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
 
@@ -84,7 +86,7 @@ namespace ComicDatabaseProject
 
                 var cmd = conn.CreateCommand();
 
-                cmd.CommandText = "UPDATE comicBook SET title = @title, issue = @issue, " +
+                cmd.CommandText = "UPDATE comicbooks SET title = @title, issue = @issue, " +
                                   "publisher = @publisher,comicBookCondition =  @comicBookCondition " +
                                   "WHERE comicBookID = @comicBookID";
                 cmd.Parameters.AddWithValue("comicBookID", cb.comicBookID);
@@ -101,7 +103,7 @@ namespace ComicDatabaseProject
         /// <summary>
         /// This method field comicBookValue in the comicbooks table
         /// </summary>
-        public void UpdateComicBookValue(comicbooks cb)
+        public void UpdateCBCondition(string cbd,int cbi)
         {
             var conn = new MySqlConnection(connectionString);
 
@@ -111,10 +113,10 @@ namespace ComicDatabaseProject
 
                 var cmd = conn.CreateCommand();
 
-                cmd.CommandText = "UPDATE comicBooks SET comicBookValue = @comicBookValue " +
+                cmd.CommandText = "UPDATE comicBooks SET comicBookCondition = @comicBookCondition " +
                                   "WHERE comicBookID = @comicBookID";
-                cmd.Parameters.AddWithValue("comicBookID", cb.comicBookID);
-                cmd.Parameters.AddWithValue("comicBookValue", cb.comicBookValue);
+                cmd.Parameters.AddWithValue("comicBookID", cbi);
+                cmd.Parameters.AddWithValue("comicBookValue", cbd);
                 cmd.ExecuteNonQuery();
             }
 
@@ -123,7 +125,7 @@ namespace ComicDatabaseProject
         /// <summary>
         /// This method field comicDetail in the comicbooks table
         /// </summary>
-        public void UpdateComicDetail(comicbooks cb)
+        public void UpdateCBCondition(comicbooks cb)
         {
             var conn = new MySqlConnection(connectionString);
 
@@ -133,10 +135,10 @@ namespace ComicDatabaseProject
 
                 var cmd = conn.CreateCommand();
 
-                cmd.CommandText = "UPDATE comicBooks SET comicDetail = @comicDetail " +
+                cmd.CommandText = "UPDATE comicbooks SET comicBookCondition = @comicBookCondition " +
                                   "WHERE comicBookID = @comicBookID";
                 cmd.Parameters.AddWithValue("comicBookID", cb.comicBookID);
-                cmd.Parameters.AddWithValue("comicDetail", cb.comicDetail);
+                cmd.Parameters.AddWithValue("comicBookCondition", cb.comicBookCondition);
                 cmd.ExecuteNonQuery();
             }
 
@@ -150,8 +152,9 @@ namespace ComicDatabaseProject
         public void DeleteComicBookRecord(comicbooks cb)
 
         {
+            var conn = new MySqlConnection(connectionString);
 
-            using (var conn = new MySqlConnection(connectionString))
+            using(conn)
 
             {
                 conn.Open();
@@ -172,8 +175,9 @@ namespace ComicDatabaseProject
         public void DeleteComicBookRecord(int cbID)
 
         {
+            var conn = new MySqlConnection(connectionString);
 
-            using (var conn = new MySqlConnection(connectionString))
+            using(conn)
 
             {
                 conn.Open();

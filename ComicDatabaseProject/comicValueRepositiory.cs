@@ -38,10 +38,12 @@ namespace ComicDatabaseProject
                 {
                     comicValue cbv = new comicValue();
                     cbv.comicId = (int)reader["comicBookID"];
-                    cbv.originalPrice = (decimal)reader["originalPrice"];
+                    cbv.originalPrice = (decimal)reader["orginalPrice"];
                     cbv.currentValue = (decimal)reader["currentValue"];
                    
                     cbValue.Add(cbv);
+
+                    Console.WriteLine($"Comic ID: {cbv.comicId} Original Price: {cbv.originalPrice} Current Price:{cbv.currentValue}");
                 }
 
                 return cbValue;
@@ -62,7 +64,7 @@ namespace ComicDatabaseProject
 
                 MySqlCommand cmd = conn.CreateCommand();
 
-                cmd.CommandText = "INSERT INTO comicvalues (comicBookID, orginalPrice, currentValue) " +
+                cmd.CommandText = "INSERT INTO comicvalue (comicBookID, orginalPrice, currentValue) " +
                                    "VALUES (@comicBookID, @orginalPrice, @currentValue)";
                 cmd.Parameters.AddWithValue("comicBookID", cbv.comicId);
                 cmd.Parameters.AddWithValue("orginalPrice", cbv.originalPrice);
@@ -75,7 +77,7 @@ namespace ComicDatabaseProject
         /// <summary>
         ///     Updates the field "currentValue"
         /// </summary>
-        public void UpdateComicDetailRecord(comicValue cbv)
+        public void UpdateComicValueRecord(comicValue cbv)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
 
@@ -85,8 +87,8 @@ namespace ComicDatabaseProject
 
                 MySqlCommand cmd = conn.CreateCommand();
 
-                cmd.CommandText = "UPDATE comicvalues SET currentValue = @currentValue " +
-                                  "WHERE comicValueID = @comicValueID";
+                cmd.CommandText = "UPDATE comicvalue SET currentValue = @currentValue " +
+                                  "WHERE comicVauleID = @comicValueID";
 
                 cmd.Parameters.AddWithValue("comicValueID", cbv.comicValueID);
                 cmd.Parameters.AddWithValue("currentValue",cbv.currentValue);
@@ -108,14 +110,14 @@ namespace ComicDatabaseProject
 
                 MySqlCommand cmd = conn.CreateCommand();
 
-                cmd.CommandText = "DELETE FROM comicvalues WHERE comicValueID = @comicValueID;";
+                cmd.CommandText = "DELETE FROM comicbookdb.comicvalue WHERE comicvalue.comicValueID = @comicValueID;";
                 cmd.Parameters.AddWithValue("comicValueID", cbv.comicValueID);
                 cmd.ExecuteNonQuery();
             }
         }
 
 
-        public void DeleteComicDetailRecord(int cbv)
+        public void DeleteComicValueRecord(int cbv)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
 
@@ -125,7 +127,7 @@ namespace ComicDatabaseProject
 
                 MySqlCommand cmd = conn.CreateCommand();
 
-                cmd.CommandText = "DELETE FROM comicvalues WHERE comicValueID = @comicValueID;";
+                cmd.CommandText = "DELETE FROM comicvalue WHERE comicValueID = @comicValueID;";
                 cmd.Parameters.AddWithValue("comicvalueID", cbv);
                 cmd.ExecuteNonQuery();
             }

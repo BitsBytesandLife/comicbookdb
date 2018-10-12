@@ -4,6 +4,7 @@ using System.Text;
 using Dapper;
 using System.Linq;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json.Linq;
 
 namespace ComicDatabaseProject
 {
@@ -16,35 +17,30 @@ namespace ComicDatabaseProject
             connectionString = _connectionString;
         }
 
-        public List<comicbooks> GetComicInfo()
+        public List<ComicBookQueries> GetComicInfo()
         {
             using (var conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
 
-                return conn.Query<comicbooks>("SELECT title, issue, p.publisherName as publisher, c.comicBookCondition as `Condition`, cd.detail,cv.currentValue " +
-                                              "FROM comicbooks cb " +
-                                              "INNER JOIN publisher p " +
-                                              "ON p.publisherID = cb.Publisher " +
-                                              "INNER JOIN `condition` c " +
-                                              "ON c.conditionID = cb.comicBookCondition " +
-                                              "INNER JOIN comicdetails cd " +
-                                              "ON cd.ComicBookDetailID = cb.comicdetail " +
-                                              "INNER JOIN comicvalue cv " +
-                                              "ON cv.comicBookID = cb.comicBookID; ").ToList();
+                return conn.Query<ComicBookQueries>("SELECT c.title, c.issue, c.publisher, c.comicBookCondition, d.detail,v.currentValue " +
+                                              "FROM comicbooks c " +
+                                              "INNER JOIN comicdetails d " +
+                                              " ON d.comicbookID = c.comicbookID " +
+                                              "INNER JOIN comicvalue v " +
+                                              " ON v.comicbookID = c.comicbookID; ").ToList();
             }
         }
 
-        public List<comicbooks> GetComicValueInfo()
+
+        public decimal GetTotalValue()
         {
             using (var conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
 
-                return conn.Query<comicbooks>("SELECT cb.title, cb.issue,cv.orginalPrice,cv.currentValue " + 
-                                              "FROM comicbookdb.comicvalue cv " +
-                                              "INNER JOIN comicbookdb.comicbooks cb " +
-                                              "ON cv.comicBookID = cb.comicBookID;").ToList();
+                return conn.Query<decimal>("SELECT sum(currentValue) as totalValue " +
+                                                    "FROM comicvalue;").Single();
             }
         }
     }

@@ -4,9 +4,15 @@ using System.Text;
 
 namespace ComicDatabaseProject
 {
-    class condition
+    class cbAppMenu
     {
-        public int conditionID { get; set; }
-        public string conditionName { get; set; }
+
+        public static void MainMenu()
+        {
+
+
+
+        }
+
     }
 }

@@ -9,7 +9,7 @@ namespace ComicDatabaseProject
     class comicDetailsRepository
     {
         private static string connectionString;
-
+       
         public comicDetailsRepository(string _connectionString)
         {
             connectionString = _connectionString;
@@ -19,7 +19,7 @@ namespace ComicDatabaseProject
         /// <summary>
         ///  Shows the comicBookDetails table. 
         /// </summary>
-        public List<comicDetails> GetDetails()
+        public List<comicDetails> ShowDetails()
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
 
@@ -28,7 +28,7 @@ namespace ComicDatabaseProject
                 conn.Open();
 
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT comicBookDetailID, detail " +
+                cmd.CommandText = "SELECT comicBookDetailID, comicBookID, detail " +
                                   "FROM comicdetails; ";
                 MySqlDataReader reader = cmd.ExecuteReader();
 
@@ -38,8 +38,11 @@ namespace ComicDatabaseProject
                 {
                     comicDetails details = new comicDetails();
                     details.comicBookDetailID = (int)reader["comicBookDetailID"];
-                    details.detail = (string)reader["details"];
+                    details.comicBookID = (int)reader["comicBookID"];
+                    details.detail = (string)reader["detail"];
                     cbDetails.Add(details);
+
+                    Console.WriteLine($"Comic Book Detail ID: {details.comicBookDetailID} Comic Book ID:{details.comicBookID} Detail:{details.detail}"); 
                 }
 
                 return cbDetails;
@@ -60,9 +63,10 @@ namespace ComicDatabaseProject
 
                 MySqlCommand cmd = conn.CreateCommand();
 
-                cmd.CommandText = "INSERT INTO comicDetails (comicBookDetailID, detail) " +
-                                   "VALUES (@comicBookDetailID, @detail)";
-                cmd.Parameters.AddWithValue("comicBookDetailID", cbd.comicBookDetailID );
+                cmd.CommandText = "INSERT INTO comicDetails (comicBookDetailID, comicBookID ,detail) " +
+                                   "VALUES (@comicBookDetailID, @comicBookID ,@detail)";
+                cmd.Parameters.AddWithValue("comicBookDetailID", cbd.comicBookDetailID);
+                cmd.Parameters.AddWithValue("comicBookID", cbd.comicBookID);
                 cmd.Parameters.AddWithValue("detail", cbd.detail);
 
                 cmd.ExecuteNonQuery();
@@ -82,7 +86,7 @@ namespace ComicDatabaseProject
 
                 MySqlCommand cmd = conn.CreateCommand();
 
-                cmd.CommandText = "UPDATE comicDetails SET detail = @deatil " +
+                cmd.CommandText = "UPDATE comicDetails SET detail = @detail " +
                                   "WHERE comicBookDetailID = @comicBookDetailID";
 
                 cmd.Parameters.AddWithValue("comicBookDetailID", cbd.comicBookDetailID);
