@@ -19,16 +19,17 @@ namespace ComicDatabaseProject
          
         public static void Main(string[] args)
         {
+
+            //setting Foreground
             Console.ForegroundColor = ConsoleColor.Gray;
             //Setting Application flies
             ConsoleAppSettings();
-            //SetRepos();
-
+            
+            //SetRepos
             cbRepo = new comicBookRepository(connectionString);
             cbdRepo = new comicDetailsRepository(connectionString);
             cbvRepo = new comicValueRepositiory(connectionString);
             cbqRepo = new DapperComicBookDBQueries(connectionString);
-
             cbUI = new cbAppUI();
 
 
@@ -40,7 +41,9 @@ namespace ComicDatabaseProject
         }
 
 
-
+        /// <summary>
+        /// This method hides the connection from GitHub
+        /// </summary>
         public static void ConsoleAppSettings()
         {
 
@@ -56,6 +59,10 @@ namespace ComicDatabaseProject
             connectionString = config.GetConnectionString("DefaultConnection");
         }
 
+        /// <summary>
+        /// This method runs the menu. 
+        /// It clears the screen, displays the menu, and runs the menu options.
+        /// </summary>
         public static void RunMenu()
         {
             Console.Clear();
@@ -63,15 +70,10 @@ namespace ComicDatabaseProject
             RunMenuOptions();
         }
 
-        public static void SetRepos()
-        {
-            cbRepo = new comicBookRepository(connectionString);
-            cbdRepo = new comicDetailsRepository(connectionString);
-            cbvRepo = new comicValueRepositiory(connectionString);
-            cbUI = new cbAppUI();
-
-        }
-
+        /// <summary>
+        /// This method prompts the end-user is they want 
+        /// to continue or exit the application. 
+        /// </summary>
         public static void ContinueApp()
         {
 
@@ -88,12 +90,18 @@ namespace ComicDatabaseProject
             return; 
         }
 
+        /// <summary>
+        /// This method displays the header for the menu from string.
+        /// </summary>
         public static void MenuHeader(string header)
         {
             Console.Clear();
             Console.WriteLine($"---- {header} ---");
         }
 
+        /// <summary>
+        /// This method displays the menu.
+        /// </summary>
         public static void DisplayMenu()
         {
             
@@ -113,14 +121,19 @@ namespace ComicDatabaseProject
             Console.WriteLine("13  Show Financial about a Collection");
             Console.WriteLine("14  Show Total Value the Collection");
             Console.WriteLine("15  Report Show All Comics");
-            Console.WriteLine("16  Exit");
+            Console.WriteLine("16  Search by Title");
+            Console.WriteLine("17  Exit");
         }
 
+        /// <summary>
+        /// This method takes the menu choice from the end-user
+        /// Then runs the option.
+        /// </summary>
         public static void RunMenuOptions()
         {
             string menuItem = cbAppUI.ValidateChoices("Select a type in a number from 1 - 14 \n" +
                                                       "to choose your menu item", new string[] { "1", "2", "3", "4", "5", "6",
-                                                      "7", "8", "9", "10", "11", "12","13","14","15","16"});
+                                                      "7", "8", "9", "10", "11", "12","13","14","15","16","17"});
                 
 
             switch (menuItem)
@@ -203,34 +216,41 @@ namespace ComicDatabaseProject
                     break;
                 case "14":
                     MenuHeader("Show Comic Value");
-                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.Green;
                     var qResults = cbqRepo.GetTotalValue();
-
                     Console.WriteLine($"Total Value of the Collection: {qResults}");
-
                     Console.ForegroundColor = ConsoleColor.Gray;
                     ContinueApp(); 
                     break;
                 case "15":
                     MenuHeader("Report Show All Comics");
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    var qShowAllCBResults = cbqRepo.GetComicInfo();
-                    foreach (var qShowAllCBResult in qShowAllCBResults)
-                    {
-                        Console.WriteLine($"Title: {qShowAllCBResult.title}  Issue:{qShowAllCBResult.issue} Publisher: {qShowAllCBResult.publisher} \n" +
-                                          $"Condition: {qShowAllCBResult.cbcondtition}  Detail: {qShowAllCBResult.detail} Current Value:{qShowAllCBResult.currentValue} \n\n");
-                    }
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    ContinueApp();
+                    showResults(cbqRepo.GetComicInfo(), ConsoleColor.Yellow, ConsoleColor.Gray);
                     return;
                 case "16":
-                    MenuHeader("Exit Application");
+                    MenuHeader("Search by Title");
+                    
+                    var qSearchTitle = cbAppUI.ValidateString("Enter the Title for the comic book:");
+                    showResults(cbqRepo.GetComicInfo(qSearchTitle), ConsoleColor.Yellow, ConsoleColor.Gray);
+                    ContinueApp();
                     return;
+                case "17":
+                    MenuHeader("Exit press any anything to exit the Comic Database");
+                    break;
 
             }
 
         }
 
+
+        public static void showResults(List<ComicBookQueries> searchResults, ConsoleColor colorChange, ConsoleColor colorReset)        {
+            Console.ForegroundColor = colorChange;
+            foreach (var searchResult in searchResults)
+            {
+                Console.WriteLine($"Title: {searchResult.title}  Issue:{searchResult.issue} Publisher: {searchResult.publisher} \n" +
+                                  $"Condition: {searchResult.cbcondtition}  Detail: {searchResult.detail} Current Value:{searchResult.currentValue} \n\n");
+            }
+            Console.ForegroundColor = colorReset;
+        }
 
         public static void InsertCB()
         {
@@ -360,6 +380,7 @@ namespace ComicDatabaseProject
         }
 
         
+
     }
 }
 

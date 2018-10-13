@@ -20,7 +20,6 @@ namespace ComicDatabaseProject
         /// <summary>
         ///  Shows the comicbook table. 
         ///  It shows the raw data of the table.
-        ///  BK:Make another method that shows the  results from a the joined table.
         /// </summary>
         public List<comicbooks> GetComicbooks()
         { 

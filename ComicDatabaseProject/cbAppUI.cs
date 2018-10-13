@@ -8,7 +8,9 @@ namespace ComicDatabaseProject
     class cbAppUI
     {
 
-
+        /// <summary>
+        /// This Method validates an Yes or No from the end-user. 
+        /// </summary>
         public static bool GetUserConsent(string question)
 
         {
@@ -32,40 +34,9 @@ namespace ComicDatabaseProject
 
         }
 
-        public static string SetPublisher(string question)
-        {
-            string[] validPublisher = { "DC", "Marvel", "Top Cow", "Mad Magazine", "Image" };
-
-            while (true)
-
-            {
-                Console.WriteLine(question);
-                string userResponse = Console.ReadLine().Trim();
-
-                if (validPublisher.Contains(userResponse.ToLower()))
-                {
-                    return userResponse;
-                }
-
-            }
-
-        }
-
-        public static string SetCondition(string question)
-        {
-            string[] validCondition = { "Mint", "Near Mint", "Good", "Near Good", "Poor" };
-            while (true)
-            {
-                Console.WriteLine(question);
-                string userResponse = Console.ReadLine().Trim();
-
-                if (validCondition.Contains(userResponse))
-                {
-                    return userResponse;
-                }
-            }
-        }
-
+        /// <summary>
+        /// This Method validates the menu choices from the end-user.
+        /// </summary>
         public static string ValidationMenuChoice(string question)
 
         {
@@ -87,6 +58,9 @@ namespace ComicDatabaseProject
             }
         }
 
+        /// <summary>
+        /// This Method validates a integer input from the end-user.
+        /// </summary>
         public static int ValidateInteger(string question)
         {
             int number = 0;
@@ -100,8 +74,10 @@ namespace ComicDatabaseProject
         }
 
 
-        
 
+        /// <summary>
+        /// This Method validates a decimal value input from the end-user.
+        /// </summary>
         public static decimal ValidateDecimal(string question)
         {
             string str = "";
@@ -114,6 +90,9 @@ namespace ComicDatabaseProject
             return dec;
         }
 
+        /// <summary>
+        /// This Method validates a string input from the end-user.
+        /// </summary>
         public static string ValidateString(string question)
         {
             string str = "";
@@ -126,6 +105,10 @@ namespace ComicDatabaseProject
             return str;
         }
 
+        /// <summary>
+        /// This Method validates the choices  input from the end-user.
+        /// The valid choices are from array of strings
+        /// </summary>
         public static string ValidateChoices(string question, string [] validCondition)
         {
             

@@ -115,7 +115,10 @@ namespace ComicDatabaseProject
             }
         }
 
-
+        /// <summary>
+        ///  Deletes record in the comicDetails table.
+        ///  Takes an integer comicBookDetailID from this table
+        /// </summary>
         public void DeleteComicDetailRecord(int cbd)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
